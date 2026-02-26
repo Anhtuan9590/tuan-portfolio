@@ -377,3 +377,28 @@ h2 { font-size: 32px; text-align: center; }
         transform: rotate(-45deg) translate(6px,-6px);
     }
 }
+/* skills */
+#skills {
+    padding: 80px 10%;
+    background: #0b1220;
+}
+#skills h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 32px;
+}
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+.skill-card {
+    background: #111827;
+    padding: 25px;
+    border-radius: 12px;
+    transition: 0.3s ease;
+}
+.skill-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0px 20px rgba(59,130,246,0.5);
+}
