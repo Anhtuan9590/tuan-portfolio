@@ -510,3 +510,14 @@ h2 { font-size: 32px; text-align: center; }
   text-decoration: none;
   font-size: 14px;
 }
+
+/* scroll animation (fade-in effect */
+.fade-in {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s ease;
+}
+.fade-in.show {
+    opacity: 1;
+    transform: translateY(0);
+}
