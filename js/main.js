@@ -1,164 +1,130 @@
-// ===== MOBILE MENU TOGGLE =====
-const menuToggle = document.querySelector(".menu-toggle");
-const navLinks = document.querySelector(".nav-links");
-const overlay = document.querySelector(".overlay-menu");
+// ===============================
+// DOM READY
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
 
-menuToggle.addEventListener("click", () => {
+  const header = document.querySelector(".header");
+  const menuToggle = document.querySelector(".menu-toggle");
+  const navLinksContainer = document.querySelector(".nav-links");
+  const navLinks = document.querySelectorAll(".nav-links a");
+  const overlay = document.querySelector(".overlay-menu");
+  const sections = document.querySelectorAll("section[id]");
+  const skillCards = document.querySelectorAll(".skill-card");
+
+  // ===============================
+  // MOBILE MENU
+  // ===============================
+  function closeMenu() {
+    menuToggle.classList.remove("active");
+    navLinksContainer.classList.remove("active");
+    overlay.classList.remove("active");
+    document.body.style.overflow = "auto";
+  }
+
+  menuToggle.addEventListener("click", () => {
     menuToggle.classList.toggle("active");
-    navLinks.classList.toggle("active");
+    navLinksContainer.classList.toggle("active");
     overlay.classList.toggle("active");
 
     document.body.style.overflow =
-        navLinks.classList.contains("active") ? "hidden" : "auto";
-});
+      navLinksContainer.classList.contains("active")
+        ? "hidden"
+        : "auto";
+  });
 
-overlay.addEventListener("click", () => {
-    menuToggle.classList.remove("active");
-    navLinks.classList.remove("active");
-    overlay.classList.remove("active");
-    document.body.style.overflow = "auto";
-});
+  overlay.addEventListener("click", closeMenu);
+  navLinks.forEach(link => link.addEventListener("click", closeMenu));
 
-document.querySelectorAll(".nav-links a").forEach(link => {
-    link.addEventListener("click", () => {
-        menuToggle.classList.remove("active");
-        navLinks.classList.remove("active");
-        overlay.classList.remove("active");
-        document.body.style.overflow = "auto";
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) closeMenu();
+  });
+
+  // ===============================
+  // SMOOTH SCROLL
+  // ===============================
+  navLinks.forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+
+      const target = document.querySelector(
+        link.getAttribute("href")
+      );
+
+      if (!target) return;
+
+      const offset = 80;
+      const position = target.offsetTop - offset;
+
+      window.scrollTo({
+        top: position,
+        behavior: "smooth"
+      });
     });
-});
-window.addEventListener("resize", () => {
-    if (window.innerWidth > 768) {
-        navLinks.classList.remove("active");
-        overlay.classList.remove("active");
-        menuToggle.classList.remove("active");
-        document.body.style.overflow = "auto";
+  });
+
+  // ===============================
+  // HEADER SCROLL EFFECT
+  // ===============================
+  window.addEventListener("scroll", () => {
+    header.classList.toggle("scrolled", window.scrollY > 50);
+  });
+
+  // ===============================
+  // ACTIVE NAV (NO FLICKER)
+  // ===============================
+  let currentActive = null;
+
+  function setActiveSection() {
+  const scrollPos = window.scrollY + window.innerHeight / 2;
+
+  let currentSection = null;
+
+  sections.forEach(section => {
+    const rect = section.getBoundingClientRect();
+
+    if (rect.top <= window.innerHeight / 2 &&
+        rect.bottom >= window.innerHeight / 2) {
+      currentSection = section.getAttribute("id");
     }
-});
-// ===== SMOOTH SCROLL =====
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener("click", function (e) {
-        e.preventDefault();
+  });
 
-        const target = document.querySelector(this.getAttribute("href"));
-
-        if (target) {
-            window.scrollTo({
-                top: target.offsetTop - 70,
-                behavior: "smooth"
-            });
-        }
+  if (currentSection) {
+    navLinks.forEach(link => {
+      link.classList.toggle(
+        "active",
+        link.getAttribute("href") === "#" + currentSection
+      );
     });
-});
+  }
+}
 
-// ===== Header Change On Scroll =====
-window.addEventListener("scroll", function () {
-    const header = document.querySelector(".header");
+  window.addEventListener("scroll", () => {
+    requestAnimationFrame(setActiveSection);
+  });
 
-    if (window.scrollY > 50) {
-        header.classList.add("scrolled");
-    } else {
-        header.classList.remove("scrolled");
-    }
-});
+  // ===============================
+  // SCROLL ANIMATION (GLOBAL)
+  // ===============================
+  const animatedElements = document.querySelectorAll(".section");
 
-
-
-
-
-// ===== SCROLL FADE-IN EFFECT =====
-const sections = document.querySelectorAll(".section");
-
-const observer = new IntersectionObserver(entries => {
+  const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = "1";
-            entry.target.style.transform = "translateY(0)";
-        }
-    });
-}, {
-    threshold: 0.2
-});
+      if (!entry.isIntersecting) return;
 
-sections.forEach(section => {
-    section.style.opacity = "0";
-    section.style.transform = "translateY(40px)";
-    section.style.transition = "all 0.6s ease";
-    observer.observe(section);
-});
+      entry.target.classList.add("show");
 
-// scroll animation (fade-in effect)
-document.addEventListener("DOMContentLoaded", function () {
-  const faders = document.querySelectorAll(".fade-in");
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("show");
-        observer.unobserve(entry.target);
+      // SKILL STAGGER
+      if (entry.target.id === "skills") {
+        skillCards.forEach((card, index) => {
+          card.style.transitionDelay = `${index * 0.1}s`;
+          card.classList.add("show");
+        });
       }
+
+      obs.unobserve(entry.target);
     });
   }, { threshold: 0.2 });
 
-  faders.forEach(el => observer.observe(el));
-});
+  animatedElements.forEach(el => observer.observe(el));
 
-
-document.querySelectorAll('nav a').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
-    e.preventDefault();
-
-    const targetId = this.getAttribute('href');
-    const target = document.querySelector(targetId);
-
-    const headerOffset = 80;
-    const elementPosition = target.offsetTop;
-    const offsetPosition = elementPosition - headerOffset;
-
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: "smooth"
-    });
-  });
-});
-
-// khi scroll đến phần nào thì thêm class active vào link tương ứng
-document.addEventListener("DOMContentLoaded", function () {
-
-  const sections = document.querySelectorAll("section[id]");
-  const navLinks = document.querySelectorAll(".nav-links a");
-
-  function setActive() {
-    let scrollPosition = window.scrollY + 200; // offset để bắt chính xác hơn
-
-    sections.forEach(section => {
-      const sectionTop = section.offsetTop;
-      const sectionHeight = section.offsetHeight;
-      const sectionId = section.getAttribute("id");
-
-      if (
-        scrollPosition >= sectionTop &&
-        scrollPosition < sectionTop + sectionHeight
-      ) {
-        navLinks.forEach(link => {
-          link.classList.remove("active");
-          if (link.getAttribute("href") === "#" + sectionId) {
-            link.classList.add("active");
-          }
-        });
-      }
-    });
-
-    // 🔥 FIX QUAN TRỌNG: nếu ở gần cuối trang thì force Contact active
-    if (
-      window.innerHeight + window.scrollY >= document.body.offsetHeight - 10
-    ) {
-      navLinks.forEach(link => link.classList.remove("active"));
-      document
-        .querySelector('.nav-links a[href="#contact"]')
-        ?.classList.add("active");
-    }
-  }
-
-  window.addEventListener("scroll", setActive);
 });
