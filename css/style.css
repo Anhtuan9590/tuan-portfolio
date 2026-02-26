@@ -264,7 +264,7 @@ h2 { font-size: 32px; text-align: center; }
 } */
 
 /* ================= TESTIMONIAL ================= */
-.testimonials {
+/* .testimonials {
     background: #0f172a;
     overflow: hidden;
 }
@@ -309,7 +309,7 @@ h2 { font-size: 32px; text-align: center; }
 @keyframes scrollLeft {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
-}
+} */
 
 /* ================= CONTACT ================= */
 .contact {
@@ -378,8 +378,8 @@ h2 { font-size: 32px; text-align: center; }
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 1024px) {
-    .service-grid {
-        grid-template-columns: repeat(2,1fr);
+    .improving-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -453,6 +453,10 @@ h2 { font-size: 32px; text-align: center; }
 
   #skills h2 {
     font-size: 28px;
+  }
+
+  .improving-grid {
+    grid-template-columns: 1fr !important;
   }
 
 }
@@ -577,4 +581,49 @@ h2 { font-size: 32px; text-align: center; }
 .fade-in.show {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* ===== CURRENTLY IMPROVING SECTION ===== */
+
+#improving {
+  padding: 80px 0;
+  background: #0b1220;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 50px;
+  color: #ffffff;
+}
+
+.improving-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.improving-card {
+  background: #111827;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+  transition: all 0.3s ease;
+}
+
+.improving-card h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #ffffff;
+}
+
+.improving-card p {
+  font-size: 14px;
+  color: #9ca3af;
+  line-height: 1.6;
+}
+
+.improving-card:hover {
+  transform: translateY(-6px);
+  border-color: #3b82f6;
 }
