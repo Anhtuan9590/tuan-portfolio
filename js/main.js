@@ -121,3 +121,44 @@ document.querySelectorAll('nav a').forEach(anchor => {
     });
   });
 });
+
+// khi scroll đến phần nào thì thêm class active vào link tương ứng
+document.addEventListener("DOMContentLoaded", function () {
+
+  const sections = document.querySelectorAll("section[id]");
+  const navLinks = document.querySelectorAll(".nav-links a");
+
+  function setActive() {
+    let scrollPosition = window.scrollY + 200; // offset để bắt chính xác hơn
+
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      const sectionId = section.getAttribute("id");
+
+      if (
+        scrollPosition >= sectionTop &&
+        scrollPosition < sectionTop + sectionHeight
+      ) {
+        navLinks.forEach(link => {
+          link.classList.remove("active");
+          if (link.getAttribute("href") === "#" + sectionId) {
+            link.classList.add("active");
+          }
+        });
+      }
+    });
+
+    // 🔥 FIX QUAN TRỌNG: nếu ở gần cuối trang thì force Contact active
+    if (
+      window.innerHeight + window.scrollY >= document.body.offsetHeight - 10
+    ) {
+      navLinks.forEach(link => link.classList.remove("active"));
+      document
+        .querySelector('.nav-links a[href="#contact"]')
+        ?.classList.add("active");
+    }
+  }
+
+  window.addEventListener("scroll", setActive);
+});
